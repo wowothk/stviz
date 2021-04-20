@@ -1,0 +1,4 @@
+pandas==1.0.5
+streamlit_echarts==0.1.0
+numpy==1.17.4
+streamlit==0.76.0
