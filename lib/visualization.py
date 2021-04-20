@@ -4,6 +4,11 @@ import re
 
 numeric_type = ["int64", "float64", "int", "float"]
 categorical_type = ["U"]
+default = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc']
+base = ['#4C72B0', '#DD8452', '#55A868', '#C44E52', '#8172B3', '#937860', '#DA8BC3', '#8C8C8C', '#CCB974', '#64B5CD']
+pastel = ['#A1C9F4', '#FFB482', '#8DE5A1', '#FF9F9B', '#D0BBFF', '#DEBB9B', '#FAB0E4', '#CFCFCF', '#FFFEA3', '#B9F2F0']
+husl = ['#F77189', '#D58C32', '#A4A031', '#50B131', '#34AE91', '#37ABB5', '#3BA3EC', '#BB83F4', '#F564D4']
+set2 = ['#66C2A5', '#FC8D62', '#E78AC3', '#A6D854', '#FFD92F', '#E5C494', '#B3B3B3']
 
 class Visual:
     @staticmethod
@@ -390,3 +395,23 @@ class Visual:
             "option":option,
             "data": data
         }
+
+    @staticmethod
+    def auto_generator(df):
+        dtypes = df.dtypes.astype(str).to_dict()
+        options = []
+        for i in dtypes.keys():
+            if dtypes[i] in numeric_type:
+                options.append(Visual.histogram(df, i, i))
+            else:
+                ndf = df[[i]]
+                ndf['count'] = 1
+                options.append(Visual.barchart(
+                    df=ndf,
+                    show="count",
+                    by=i,
+                    title=i
+                ))
+                del ndf
+
+        return options

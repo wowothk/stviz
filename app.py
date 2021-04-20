@@ -4,6 +4,12 @@ import pandas as pd
 from module import form
 from lib.visualization import Visual
 
+default = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc']
+base = ['#4C72B0', '#DD8452', '#55A868', '#C44E52', '#8172B3', '#937860', '#DA8BC3', '#8C8C8C', '#CCB974', '#64B5CD']
+pastel = ['#A1C9F4', '#FFB482', '#8DE5A1', '#FF9F9B', '#D0BBFF', '#DEBB9B', '#FAB0E4', '#CFCFCF', '#FFFEA3', '#B9F2F0']
+husl = ['#F77189', '#D58C32', '#A4A031', '#50B131', '#34AE91', '#37ABB5', '#3BA3EC', '#BB83F4', '#F564D4']
+set2 = ['#66C2A5', '#FC8D62', '#E78AC3', '#A6D854', '#FFD92F', '#E5C494', '#B3B3B3']
+
 def fileUpload():
     uploaded_file = st.sidebar.file_uploader("Choose a file")
     df = pd.read_csv(uploaded_file)
@@ -11,9 +17,22 @@ def fileUpload():
 
 def selectVisual():
     option = st.sidebar.selectbox('Choose Type Of Visualization', 
-    ('Bar', 'Line', 'Pie'))
+    ('Auto', 'Bar', 'Line', 'Pie', "Scatter", "Heatmap", "Box", "Histogram"))
     return option
 
+def colormap_check(data):
+    if data == "default":
+        color = default
+    elif data == "base":
+        color = base
+    elif data == "pastel":
+        color = pastel
+    elif data == "husl":
+        color = husl
+    else:
+        color = set2
+    
+    return color
 
 def main():
     st.sidebar.title("Stream Vis")
@@ -35,6 +54,7 @@ def main():
                     data['orientation'],
                     data['title']
                 )
+                opt['color'] = colormap_check(data['color'])
                 st_echarts(opt)
         elif option == "Line":
             data = form.line(df)
@@ -45,6 +65,7 @@ def main():
                     data['andby'],
                     data['title']
                 )
+                opt['color'] = colormap_check(data['color'])
                 st_echarts(opt)
         elif option == "Pie":
             data = form.pie(df)
@@ -55,8 +76,57 @@ def main():
                     data['title'],
                     data['doughnut']
                 )
+                opt['color'] = colormap_check(data['color'])
                 st_echarts(opt)
+        elif option == "Scatter":
+            data = form.scatter(df)
+            if st.button("Generate Scatter"):
+                opt = Visual.scatter(df,
+                    data['x'],
+                    data['y'],
+                    data['group'],
+                    data['title']
+                )
+                opt['color'] = colormap_check(data['color'])
+                st_echarts(opt)
+        elif option == "Box":
+            data = form.boxplot(df)
+            if st.button("Generate Box"):
+                opt = Visual.boxplot(df,
+                    data['show'],
+                    data['by'],
+                    data['orientation'],
+                    data['title']
+                )
+                opt['color'] = colormap_check(data['color'])
+                st_echarts(opt['option'])
+        elif option == "Heatmap":
+            data = form.heatmap(df)
+            if st.button('Generate Heatmap'):
+                opt = Visual.heatmap(df,
+                    data['x'],
+                    data['y'],
+                    data['value'],
+                    data['title']
+                )
+                opt['color'] = colormap_check(data['color'])
+                st_echarts(opt)
+        elif option == "Histogram":
+            data = form.histogram(df)
+            if st.button("Generate Histogram"):
+                opt = Visual.histogram(df,
+                    data['show'],
+                    data['title']
+                )
+                opt['color'] = colormap_check(data['color'])
+                st_echarts(opt)
+        else:
+            if st.button("Generate"):
+                opts = Visual.auto_generator(df)
+                for x in opts:
+                    st_echarts(x)
 
+        
     except:
         st.markdown("""
             There is no dataset
