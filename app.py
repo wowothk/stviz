@@ -3,7 +3,6 @@ from streamlit_echarts import st_echarts
 import pandas as pd
 from module import form
 from lib.visualization import Visual
-from lib.geomap import usaMap
 import json
 from streamlit_echarts import Map
 
