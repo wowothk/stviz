@@ -141,9 +141,19 @@ def histogram(df):
 
 def geomap(df):
     opt = df.columns.tolist()
-    geojson = st.file_uploader("Choose geojson file")
-    with open(geojson, "r") as f:
-        map = Map("USA", json.loads(f.read())
+    title = st.text_input("Title")
+    region = st.selectbox("Region", tuple(opt))
+    value = st.selectbox("Value", tuple(opt))
+    # geojson = st.file_uploader("Choose geojson file")
+    geojson = st.selectbox("geojson", ('jakarta', 'jogja'))
+    
+    # with open(geojson, "r") as f:
+    #     map = Map("geojson", json.loads(f.read()))
+
     return {
-        "map": 
+        "map": geojson,
+        "map_title": "geojson",
+        "title": title,
+        "region": region,
+        "value": value
     }

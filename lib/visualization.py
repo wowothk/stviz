@@ -415,3 +415,57 @@ class Visual:
                 del ndf
 
         return options
+
+    @staticmethod
+    def geomap(df, region, value, map_title, title):
+        region = df[region].tolist()
+        value = df[value].tolist()
+        data = []
+        for i in range(len(region)):
+            data.append({
+                "name": region[i],
+                "value": value[i]
+            })
+
+        options = {
+            "title": {
+                "text": title
+            },
+            "tooltip": {
+                "trigger": "item",
+                "showDelay": 0,
+                "transitionDuration": 0.2
+            },
+            "visualMap": {
+                "left": "right",
+                "min": min(value),
+                "max": max(value),
+                "inRange": {
+                    "color": [
+                        "#313695",
+                        "#4575b4",
+                        "#74add1",
+                        "#abd9e9",
+                        "#e0f3f8",
+                        "#ffffbf",
+                        "#fee090",
+                        "#fdae61",
+                        "#f46d43",
+                        "#d73027",
+                        "#a50026",
+                    ]
+                },
+                "text": ["High", "Low"],
+                "calculable": True,
+            },
+            "series": [
+                {
+                    "type": "map",
+                    "roam": True,
+                    "map": map_title,
+                    "emphasis": {"label": {"show": True}},
+                    "data": data,
+                }
+            ],
+        }
+        return options
