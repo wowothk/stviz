@@ -19,7 +19,7 @@ def fileUpload():
 
 def selectVisual():
     option = st.sidebar.selectbox('Choose Type Of Visualization', 
-    ('Auto', 'Bar', 'Line', 'Pie', "Scatter", "Heatmap", "Box", "Histogram", "Map"))
+    ('Auto', 'Bar', 'Line', 'Pie', "Scatter", "Heatmap", "Box", "Histogram", "Map", "Radar"))
     return option
 
 def colormap_check(data):
@@ -41,9 +41,9 @@ def main():
     st.sidebar.markdown("""
         Streamlit Visualization using Echart 
     """)
-    st.sidebar.markdown("""---""")
     try:
         df = fileUpload()
+        st.sidebar.markdown("""---""")
         st.write(df)
         option = selectVisual()
         if option == "Bar":
@@ -141,6 +141,17 @@ def main():
                         map = Map(data["map_title"], json.loads(f.read()))
 
                 st_echarts(opt, map=map)
+        elif option == "Radar":
+            data = form.radar(df)
+            if st.button("Generate Radar"):
+                opt = Visual.radar(df,
+                    data["show"],
+                    data["by"],
+                    data["title"],
+                    data["method"]
+                )
+                st.echo(opt)
+                st_echarts(opt)
         else:
             if st.button("Generate"):
                 opts = Visual.auto_generator(df)

@@ -469,3 +469,48 @@ class Visual:
             ],
         }
         return options
+
+    @staticmethod
+    def radar(df, show, by, title=None, method="sum"):
+        """
+        show list (multiselect)
+        """
+        ndf = df.groupby(by).agg(method)
+        # indic = df.groupby(by).agg("sum").max(axis=1).to_dict()
+        indic = (ndf[show].max(axis=1)+10).to_dict()
+        indicator = [{"name":i, "max": j} for i, j in indic.items()]
+        del indic
+        del df
+        data = []
+        for x in show:
+            data.append({
+                "name": x,
+                "value": ndf[x].tolist()
+            })
+        
+        del ndf
+        options = {
+            "title": {
+                "text": title
+            },
+            "tooltip": {},
+            "legend": {
+                "data": show,
+                "orient": "vertical",
+                "left": "left"
+            },
+            "radar": {
+                "name": {
+                    "textStyle": "#fff",
+                    "backgroundColor": "#999",
+                    "borderRadius": 3,
+                    "padding": [3, 5]
+                },
+                "indicator": indicator
+            },
+            "series": [{
+                "type": "radar",
+                "data": data
+            }]
+        }
+        return options

@@ -144,16 +144,27 @@ def geomap(df):
     title = st.text_input("Title")
     region = st.selectbox("Region", tuple(opt))
     value = st.selectbox("Value", tuple(opt))
-    # geojson = st.file_uploader("Choose geojson file")
     geojson = st.selectbox("geojson", ('jakarta', 'jogja'))
-    
-    # with open(geojson, "r") as f:
-    #     map = Map("geojson", json.loads(f.read()))
-
     return {
         "map": geojson,
         "map_title": "geojson",
         "title": title,
         "region": region,
         "value": value
+    }
+
+def radar(df):
+    opt = df.columns.tolist()
+    show = st.multiselect("Show", tuple(opt))
+    by = st.selectbox("By", tuple(opt))
+    title = st.text_input("Title")
+    method = st.selectbox("Method", (
+        "sum",
+        "mean"
+    ))
+    return {
+        "show": show,
+        "by": by,
+        "title": title,
+        "method": method
     }
