@@ -3,6 +3,7 @@ from streamlit_echarts import st_echarts
 import pandas as pd
 from module import form
 from lib.visualization import Visual
+from lib.geomap import usaMap
 
 default = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc']
 base = ['#4C72B0', '#DD8452', '#55A868', '#C44E52', '#8172B3', '#937860', '#DA8BC3', '#8C8C8C', '#CCB974', '#64B5CD']
@@ -17,7 +18,7 @@ def fileUpload():
 
 def selectVisual():
     option = st.sidebar.selectbox('Choose Type Of Visualization', 
-    ('Auto', 'Bar', 'Line', 'Pie', "Scatter", "Heatmap", "Box", "Histogram"))
+    ('Auto', 'Bar', 'Line', 'Pie', "Scatter", "Heatmap", "Box", "Histogram", "USA"))
     return option
 
 def colormap_check(data):
@@ -120,6 +121,9 @@ def main():
                 )
                 opt['color'] = colormap_check(data['color'])
                 st_echarts(opt)
+        elif option == "USA":
+            opt, map = usaMap()
+            st_echarts(opt, map=map)
         else:
             if st.button("Generate"):
                 opts = Visual.auto_generator(df)

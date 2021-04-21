@@ -1,4 +1,6 @@
 import streamlit as st
+import json
+from streamlit_echarts import Map
 
 def bar(df):
     opt = df.columns.tolist()
@@ -135,4 +137,13 @@ def histogram(df):
         'show': show,
         'title': title,
         'color': color
+    }
+
+def geomap(df):
+    opt = df.columns.tolist()
+    geojson = st.file_uploader("Choose geojson file")
+    with open(geojson, "r") as f:
+        map = Map("USA", json.loads(f.read())
+    return {
+        "map": 
     }
